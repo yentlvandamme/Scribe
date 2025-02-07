@@ -6,11 +6,13 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/yentlvandamme/Scribe/snippets"
 )
 
-var snippets Snippets = Snippets{
+var mockSnippets snippets.Snippets = snippets.Snippets{
 	Version: "1.0.0",
-	Snippets: map[string]Snippet{
+	Snippets: map[string]snippets.Snippet{
 		"Snippet1": {
 			Name:        "Snippet1",
 			Description: "Description1",
@@ -25,7 +27,7 @@ var snippets Snippets = Snippets{
 }
 
 func TestParseFromJson(t *testing.T) {
-	snippetsInBytes, err := ParseToBytes(snippets)
+	snippetsInBytes, err := ParseToBytes(mockSnippets)
 	if err != nil {
 		t.Errorf("Could not parse snippets during the setup stage.")
 	}
@@ -34,8 +36,8 @@ func TestParseFromJson(t *testing.T) {
 	if err != nil {
 		t.Errorf("Could not parse snippets: %s", err)
 	}
-	if !reflect.DeepEqual(snippets, result) {
-		t.Errorf("Resulting struct does not match expected struct:\n%s\nVS\n%s", snippets, result)
+	if !reflect.DeepEqual(mockSnippets, result) {
+		t.Errorf("Resulting struct does not match expected struct:\n%s\nVS\n%s", mockSnippets, result)
 	}
 }
 
@@ -49,18 +51,18 @@ func TestFailingParseFromJson(t *testing.T) {
 	if err == nil {
 		t.Errorf("Value was parsed while it shouldn't have been: %s", err)
 	}
-	if reflect.DeepEqual(snippets, result) {
-		t.Errorf("Values should not match:\n%s\nVS\n%s", snippets, result)
+	if reflect.DeepEqual(mockSnippets, result) {
+		t.Errorf("Values should not match:\n%s\nVS\n%s", mockSnippets, result)
 	}
 }
 
 func TestParseToBytes(t *testing.T) {
-	result, err := ParseToBytes(snippets)
+	result, err := ParseToBytes(mockSnippets)
 	if err != nil {
-		t.Errorf("Could not parse snippets: %s", snippets)
+		t.Errorf("Could not parse snippets: %s", mockSnippets)
 	}
 
-	expected, err := json.MarshalIndent(snippets, "", "\t")
+	expected, err := json.MarshalIndent(mockSnippets, "", "\t")
 	if err != nil {
 		t.Errorf("Failed to marshal struct in order to prepare unit test: %s", t.Name())
 	}
