@@ -13,8 +13,8 @@ type Snippet struct {
 }
 
 type Snippets struct {
-	Version  string    `json:"version"`
-	Snippets []Snippet `json:"Snippets"`
+	Version  string             `json:"version"`
+	Snippets map[string]Snippet `json:"Snippets"`
 }
 
 func ParseJson(reader io.Reader) (Snippets, error) {

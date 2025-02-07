@@ -10,13 +10,13 @@ import (
 
 var snippets Snippets = Snippets{
 	Version: "1.0.0",
-	Snippets: []Snippet{
-		{
+	Snippets: map[string]Snippet{
+		"Snippet1": {
 			Name:        "Snippet1",
 			Description: "Description1",
 			ModifiedOn:  time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
-		{
+		"Snippet2": {
 			Name:        "Snippet2",
 			Description: "Description2",
 			ModifiedOn:  time.Date(2025, 5, 2, 2, 0, 0, 0, time.UTC),
