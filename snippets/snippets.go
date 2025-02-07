@@ -12,3 +12,7 @@ type Snippets struct {
 	Version  string             `json:"version"`
 	Snippets map[string]Snippet `json:"Snippets"`
 }
+
+func (snippetCollection *Snippets) AddSnippet(newSnippet Snippet) {
+	snippetCollection.Snippets[newSnippet.Name] = newSnippet
+}
