@@ -8,11 +8,13 @@ type Snippet struct {
 	ModifiedOn  time.Time `json:"ModifiedOn"`
 }
 
+type SnippetsMap map[string]Snippet
+
 type Snippets struct {
-	Version  string             `json:"version"`
-	Snippets map[string]Snippet `json:"Snippets"`
+	Version     string      `json:"version"`
+	SnippetsMap SnippetsMap `json:"Snippets"`
 }
 
-func (snippetCollection *Snippets) AddSnippet(newSnippet Snippet) {
-	snippetCollection.Snippets[newSnippet.Name] = newSnippet
+func (snippetCollection *SnippetsMap) AddSnippet(newSnippet Snippet) {
+	(*snippetCollection)[newSnippet.Name] = newSnippet
 }

@@ -12,7 +12,7 @@ import (
 
 var mockSnippets snippets.Snippets = snippets.Snippets{
 	Version: "1.0.0",
-	Snippets: map[string]snippets.Snippet{
+	SnippetsMap: snippets.SnippetsMap{
 		"Snippet1": {
 			Name:        "Snippet1",
 			Description: "Description1",
