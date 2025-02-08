@@ -16,10 +16,12 @@ var mockSnippets snippets.Snippets = snippets.Snippets{
 		"Snippet1": {
 			Name:        "Snippet1",
 			Description: "Description1",
+			Value:       "Value1",
 			ModifiedOn:  time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
 		"Snippet2": {
 			Name:        "Snippet2",
+			Value:       "Value2",
 			Description: "Description2",
 			ModifiedOn:  time.Date(2025, 5, 2, 2, 0, 0, 0, time.UTC),
 		},

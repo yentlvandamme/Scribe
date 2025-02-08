@@ -11,19 +11,23 @@ func TestSuccessfullyAddingNewSnippet(t *testing.T) {
 		SnippetsMap: SnippetsMap{
 			"Snippet1": {
 				Name:        "Snippet1",
+				Value:       "Value1",
 				Description: "Description1",
 				ModifiedOn:  time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
 			},
 		},
 	}
-
 	var snippetToAdd Snippet = Snippet{
 		Name:        "Snippet2",
+		Value:       "Value2",
 		Description: "Description2",
 		ModifiedOn:  time.Date(2025, 5, 2, 2, 0, 0, 0, time.UTC),
 	}
 
-	mockSnippets.SnippetsMap.AddSnippet(snippetToAdd)
+	err := mockSnippets.SnippetsMap.AddSnippet(snippetToAdd)
+	if err != nil {
+		t.Errorf("Adding a snippet throws an error when it shouldn't.")
+	}
 
 	if addedSnippet, ok := mockSnippets.SnippetsMap[snippetToAdd.Name]; ok == false {
 		t.Errorf("Failed to add the snippet to the map.")
@@ -31,5 +35,29 @@ func TestSuccessfullyAddingNewSnippet(t *testing.T) {
 		if !reflect.DeepEqual(snippetToAdd, addedSnippet) {
 			t.Errorf("Snippet has been added incorrectly to the map.")
 		}
+	}
+}
+
+func TestAddingDuplicateSnippet(t *testing.T) {
+	var mockSnippets Snippets = Snippets{
+		SnippetsMap: SnippetsMap{
+			"Snippet1": {
+				Name:        "Snippet1",
+				Value:       "Value1",
+				Description: "Description1",
+				ModifiedOn:  time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
+			},
+		},
+	}
+	var snippetToAdd Snippet = Snippet{
+		Name:        "Snippet1",
+		Value:       "Value2",
+		Description: "Description2",
+		ModifiedOn:  time.Date(2025, 5, 2, 2, 0, 0, 0, time.UTC),
+	}
+
+	err := mockSnippets.SnippetsMap.AddSnippet(snippetToAdd)
+	if err == nil {
+		t.Errorf("Snippet was added while there was already a snippet with a similar key present.")
 	}
 }
