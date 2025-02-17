@@ -113,7 +113,7 @@ func RemoveSnippet(cmd *Command) {
 		fmt.Println("Could not parse stored snippets: %w", err)
 	}
 
-	delete(parsedSnippets.SnippetsMap, cmd.SnippetName)
+	parsedSnippets.SnippetsMap.DeleteSnippet(cmd.SnippetName)
 	snippetsBytes, err := parse.ParseToBytes(parsedSnippets)
 	if err != nil {
 		fmt.Println("Could not parse the JSON structure to bytes: %w", err)

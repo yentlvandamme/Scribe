@@ -27,3 +27,12 @@ func (snippetCollection *SnippetsMap) AddSnippet(newSnippet Snippet) error {
 	(*snippetCollection)[newSnippet.Name] = newSnippet
 	return nil
 }
+
+func (snippetCollection *SnippetsMap) DeleteSnippet(snippetToRemove string) error {
+	if _, ok := (*snippetCollection)[snippetToRemove]; !ok {
+		return errors.New("Snippet doesn't exist")
+	}
+
+	delete(*snippetCollection, snippetToRemove)
+	return nil
+}
