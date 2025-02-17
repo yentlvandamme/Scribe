@@ -21,7 +21,7 @@ var FileStoragePath string
 type Command struct {
 	CommandName string
 	Description string
-	Execute     func(*Command) error
+	Execute     func(*Command)
 
 	// Flags
 	SnippetName        string
@@ -35,10 +35,15 @@ var commands = map[string]*Command{
 		Description: "Add a snippet",
 		Execute:     AddSnippet,
 	},
+	"delete": {
+		CommandName: "delete",
+		Description: "Delete a snippet",
+		Execute:     RemoveSnippet,
+	},
 	"setup": {
 		CommandName: "setup",
 		Description: "Runs the setup script",
-		Execute:     runSetup,
+		Execute:     RunSetup,
 	},
 }
 
@@ -58,15 +63,15 @@ func main() {
 		flag.StringVar(&command.SnippetContent, "snippet", "", "The snippet you wish to add")
 		flag.StringVar(&command.SnippetDescription, "description", "", "The description of the snippet you wish to add")
 
+	case "delete":
+		flag.StringVar(&command.SnippetName, "name", "", "The snippet you wish to add")
 	}
 	flag.CommandLine.Parse(os.Args[2:])
 
-	if err := command.Execute(command); err != nil {
-		fmt.Printf("Failed to execute command: %s", commandName)
-	}
+	command.Execute(command)
 }
 
-func AddSnippet(cmd *Command) error {
+func AddSnippet(cmd *Command) {
 	file, err := storage.ReadFromFile(FileStoragePath)
 	if err != nil {
 		fmt.Println("Could not open snippets file: %w", err)
@@ -94,12 +99,37 @@ func AddSnippet(cmd *Command) error {
 	if err != nil {
 		fmt.Println("Failed to write to file: %w", err)
 	}
-
-	return nil
 }
 
-func runSetup(cmd *Command) error {
-	return setup()
+func RemoveSnippet(cmd *Command) {
+	file, err := storage.ReadFromFile(FileStoragePath)
+	if err != nil {
+		fmt.Println("Could not open snippets file: %w", err)
+	}
+	defer file.Close()
+
+	parsedSnippets, err := parse.ParseJson(file)
+	if err != nil {
+		fmt.Println("Could not parse stored snippets: %w", err)
+	}
+
+	delete(parsedSnippets.SnippetsMap, cmd.SnippetName)
+	snippetsBytes, err := parse.ParseToBytes(parsedSnippets)
+	if err != nil {
+		fmt.Println("Could not parse the JSON structure to bytes: %w", err)
+	}
+
+	err = storage.WriteToFile(FileStoragePath, snippetsBytes)
+	if err != nil {
+		fmt.Println("Failed to write to file: %w", err)
+	}
+}
+
+func RunSetup(cmd *Command) {
+	err := setup()
+	if err != nil {
+		fmt.Println("Could not run setup: %w", err)
+	}
 }
 
 func setup() error {
