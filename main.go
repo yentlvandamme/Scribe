@@ -83,12 +83,15 @@ func AddSnippet(cmd *Command) {
 		fmt.Println("Could not parse stored snippets: %w", err)
 	}
 
-	parsedSnippets.SnippetsMap.AddSnippet(snippets.Snippet{
+	if err = parsedSnippets.SnippetsMap.AddSnippet(snippets.Snippet{
 		Name:        (*cmd).SnippetName,
 		Value:       (*cmd).SnippetContent,
 		Description: (*cmd).SnippetDescription,
 		ModifiedOn:  time.Now(),
-	})
+	}); err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	snippetsBytes, err := parse.ParseToBytes(parsedSnippets)
 	if err != nil {
@@ -113,7 +116,11 @@ func RemoveSnippet(cmd *Command) {
 		fmt.Println("Could not parse stored snippets: %w", err)
 	}
 
-	parsedSnippets.SnippetsMap.DeleteSnippet(cmd.SnippetName)
+	if err = parsedSnippets.SnippetsMap.DeleteSnippet(cmd.SnippetName); err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	snippetsBytes, err := parse.ParseToBytes(parsedSnippets)
 	if err != nil {
 		fmt.Println("Could not parse the JSON structure to bytes: %w", err)
